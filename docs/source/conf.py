@@ -46,7 +46,7 @@ source_suffix = '.rst'
 #source_encoding = 'utf-8-sig'
 
 # The master index document.
-master_doc = 'index'
+master_doc = 'contents'
 
 # General information about the project.
 project = u'RAT Notes'
@@ -204,7 +204,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'RATNotes.tex', u'RAT Notes Documentation',
+  ('content', 'RATNotes.tex', u'RAT Notes Documentation',
    u'Ray Ch', 'manual'),
 ]
 
@@ -234,7 +234,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'ratnotes', u'RAT Notes Documentation',
+    ('contents', 'ratnotes', u'RAT Notes Documentation',
      [u'Ray Ch'], 1)
 ]
 

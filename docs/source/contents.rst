@@ -1,0 +1,31 @@
+.. _contents:
+
+===============================
+RAT Note documentation contents
+===============================
+
+.. toctree::
+    :hidden:
+
+    index
+
+.. toctree::
+    :maxdepth: 3
+
+    intro/index
+    topics/index
+    howto/index
+    faq/index
+    ref/index
+    misc/index
+    glossary
+    releases/index
+    internals/index
+
+Indices, glossary and tables
+============================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`glossary`
+
