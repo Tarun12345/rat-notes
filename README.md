@@ -13,7 +13,7 @@ Main objective is to make the most simpliest way of writing notes for computer s
 + [Anmol Akhilesh](https://www.facebook.com/anmolakhilesh)
 
 ##Features:
-###Version 1:
+###Version 0.1:
 -----------------
 + Simple and Fatest way to take notes making using of [sir-trevor-js](http://madebymany.github.io/sir-trevor-js/)
 + Version Control of notes.
