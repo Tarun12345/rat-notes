@@ -1,0 +1,309 @@
+*,
+*:after,
+*::before
+  -webkit-box-sizing: border-box
+  -moz-box-sizing: border-box
+  box-sizing: border-box
+
+@font-face
+  font-family: 'icons'
+  src: url('../fonts/icons/icons.eot')
+  src: url('../fonts/icons/icons.eot?#iefix') format('embedded-opentype'),
+		url('../fonts/icons/icons.woff') format('woff'),
+		url('../fonts/icons/icons.ttf') format('truetype'),
+		url('../fonts/icons/icons.svg#icons') format('svg')
+  font-weight: normal
+  font-style: normal
+
+[class^="icon-"],
+[class*=" icon-"]
+  font-family: 'icons'
+  speak: none
+  font-style: normal
+  font-weight: normal
+  font-variant: normal
+  text-transform: none
+  line-height: 1
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+
+.icon-pencil:before
+  content: "\e600"
+
+.icon-search:before
+  content: "\e601"
+
+.icon-users:before
+  content: "\e602"
+
+.icon-profile:before
+  content: "\e603"
+
+.icon-heart:before
+  content: "\e604"
+
+.icon-heart2:before
+  content: "\e605"
+
+.icon-star:before
+  content: "\e606"
+
+.icon-star2:before
+  content: "\e607"
+
+.icon-bookmarks:before
+  content: "\e608"
+
+.icon-enter:before
+  content: "\e609"
+
+.icon-exit:before
+  content: "\e60a"
+
+.icon-signup:before
+  content: "\e60b"
+
+.icon-menu:before
+  content: "\e60e"
+
+.icon-note:before
+  content: "\e60c"
+
+.icon-params:before
+  content: "\e60d"
+
+.menu-main,
+.menu-main ul
+  margin: 0
+  padding: 0
+  background: white
+  color: #5f6f81
+  list-style: none
+  text-transform: none
+  font-weight: 300
+  font-family: 'Lato', Arial, sans-serif
+  line-height: 60px
+  z-index: 10
+
+.menu-main
+  position: fixed
+  top: 0
+  left: 0
+  width: 100%
+  height: 60px
+  font-size: 13px
+  a
+    display: block
+    height: 100%
+    color: #5f6f81
+    text-decoration: none
+    cursor: pointer
+    .icon-search
+      position: absolute
+      top: 0
+      left: 0
+      height: 60px
+  > li
+    display: block
+    float: left
+    height: 100%
+    border-right: 1px solid #c6d0da
+    text-align: center
+    &:last-child
+      float: right
+      border-right: none
+      border-left: 1px solid #c6d0da
+    > a
+      padding: 0 30px
+      text-transform: uppercase
+      letter-spacing: 1px
+      font-weight: bold
+    &:after
+      display: table
+      clear: both
+      content: ""
+  form
+    display: inline
+
+.no-touch .menu-main a:hover,
+.no-touch .menu li.search-item:hover,
+.no-touch .menu li.search-item:hover a
+  background: #5f6f81
+  color: white
+
+/* icon-only trigger (menu item) */
+.menu-main li.trigger
+  position: relative
+  width: 60px
+  -webkit-touch-callout: none
+  -webkit-user-select: none
+  -khtml-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  user-select: none
+
+
+.menu-wrapper
+  position: fixed
+  top: 60px
+  bottom: 0
+  left: 0
+  overflow: hidden
+  width: 60px
+  border-top: 1px solid #c6d0da
+  border-right: 1px solid #c6d0da
+  background: white
+  -webkit-transform: translateX(-60px)
+  -moz-transform: translateX(-60px)
+  transform: translateX(-60px)
+  -webkit-transition: -webkit-transform 0.3s, width 0.3s
+  -moz-transition: -moz-transform 0.3s, width 0.3s
+  transition: transform 0.3s, width 0.3s
+
+.scroller
+  position: absolute
+  overflow-y: scroll
+  width: 370px
+  height: 100%
+
+.menu
+  border-bottom: 1px solid #c6d0da
+  text-align: left
+  font-size: 18px
+  li:not(:first-child), li li
+    box-shadow: inset 0 1px #c6d0da
+
+.submenu
+  li
+    overflow: hidden
+    height: 0
+    -webkit-transition: height 0.3s
+    -moz-transition: height 0.3s
+    transition: height 0.3s
+    a
+      color: #c1c9d1
+
+input.search
+  position: relative
+  z-index: 10
+  padding-left: 10px
+  outline: none
+  border: none
+  background: transparent
+  color: #5f6f81
+  font-weight: 300
+  font-family: 'Lato', Arial, sans-serif
+  cursor: pointer
+
+/* placeholder */
+.search::-webkit-input-placeholder
+  color: #5f6f81
+
+.search:-moz-placeholder
+  color: #5f6f81
+
+.search::-moz-placeholder
+  color: #5f6f81
+
+.search:-ms-input-placeholder
+  color: #5f6f81
+
+/* hide placeholder when active in Chrome */
+.search:focus::-webkit-input-placeholder,
+.no-touch .menu li.search-item:hover .search:focus::-webkit-input-placeholder
+  color: transparent
+
+input.search:focus
+  cursor: text
+
+.no-touch .menu li.search-item:hover input.search
+  color: white
+
+/* placeholder */
+.no-touch .menu li.search-item:hover .search::-webkit-input-placeholder
+  color: white
+
+.no-touch .menu li.search-item:hover .search:-moz-placeholder
+  color: white
+
+.no-touch .menu li.search-item:hover .search::-moz-placeholder
+  color: white
+
+.no-touch .menu li.search-item:hover .search:-ms-input-placeholder
+  color: white
+
+
+.icon::before
+  display: inline-block
+  width: 60px
+  text-align: center
+  text-transform: none
+  font-weight: normal
+  font-style: normal
+  font-variant: normal
+  font-family: 'icons'
+  line-height: 1
+  speak: none
+  -webkit-font-smoothing: antialiased
+
+/* if an icon anchor has a span, hide the span */
+.icon span
+  width: 0
+  height: 0
+  display: block
+  overflow: hidden
+
+.icon-menu::before
+  margin-left: -15px
+  vertical-align: -20px
+  width: 30px
+  height: 3px
+  background: #5f6f81
+  box-shadow: 0 3px white, 0 -6px #5f6f81, 0 -9px white, 0 -12px #5f6f81
+  content: ''
+
+.no-touch .icon-menu:hover::before,
+.no-touch .icon-menu.selected:hover::before
+  background: white
+  box-shadow: 0 3px #5f6f81, 0 -6px white, 0 -9px #5f6f81, 0 -12px white
+
+.icon-menu.selected::before
+  background: #5993cd
+  box-shadow: 0 3px white, 0 -6px #5993cd, 0 -9px white, 0 -12px #5993cd
+
+/* styles for opening menu */
+.menu-wrapper.open-all,
+.menu-wrapper.open-part
+  -webkit-transform: translateX(0px)
+  -moz-transform: translateX(0px)
+  transform: translateX(0px)
+
+.menu-wrapper.open-all
+  width: 340px
+
+.menu-wrapper.open-all .submenu li
+  height: 60px
+
+@media screen and (max-width: 422px)
+  .menu-wrapper.open-all
+    -webkit-transform: translateX(0px)
+    -moz-transform: translateX(0px)
+    transform: translateX(0px)
+    width: 100%
+
+  .menu-wrapper.open-all .scroller
+    width: 130%
+
+  .menu-title
+    display: none
+
+  .menu-main > li > a
+    padding: 0px
+
+  .icon-menu:before
+    margin-left: 0px
+
+.menu-main [class^="icon-"]
+  margin: 20px
+

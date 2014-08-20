@@ -1,0 +1,20 @@
+{% load sirtrevor %}
+<div class="content-block" id="chart-block">
+<canvas width="600" height="400"></canvas>
+</div>
+<script type="text/javascript">
+	var complete = this.$('#chart-block'),
+		cont = complete.find('canvas');
+      require.config({
+        paths: {
+          "sirtrevor": "/static/sirtrevor/"
+        },
+        waitSeconds: 15
+      });
+      require(["sirtrevor/Chart.min"],function(){
+          cont = cont.get(0).getContext("2d");
+          data = {{ text|as_json }};
+          console.log(data);
+          myChart = new Chart(cont).Line(data);
+      });
+</script>

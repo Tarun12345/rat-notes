@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %} Login {% endblock %}
+
+
+{% block content %}
+	<div id="login">
+		<h2><strong>Welcome</strong> to Rat Notes.</h2>
+			<img class="logo-big" alt='quark-note' src='{{ STATIC_URL }}img/logo-big.png'>
+          <form method='POST' id='note-form'>
+			<fieldset>
+				<p>{{ form.username }}</p> <!-- JS because of IE support; better: placeholder="Username" -->
+                <p>        
+                {% if form.username.errors %}
+                    <div>{{ form.username.errors }}</div>
+                {% endif %}
+                </p>
+				<p>{{ form.password}}</p> <!-- JS because of IE support; better: placeholder="Password" -->
+                <p>
+                {% if form.password.errors %}
+                  <div>{{ form.password.errors }}</div>
+                {% endif %}
+                </p>
+				<p><a href="#">Forgot Password?</a></p>
+				<p><input type="submit" value="Login"></p>
+	            <a href="{% url 'register' %}"><h3>Create a new account? It's completely free.</h3></a>
+                <p>
+                {{ form.non_field_errors }}</p>
+			</fieldset>
+            {% csrf_token %}
+		</form>
+{%comment%}
+		<p><span class="btn-round">or</span></p>
+		<p>
+			<a class="facebook-before"><span class="fontawesome-facebook"></span></a>
+			<button class="facebook">Login Using Facbook</button>
+		</p>
+		<p>
+			<a class="twitter-before"><span class="fontawesome-twitter"></span></a>
+			<button class="twitter">Login Using Twitter</button>
+		</p>
+{%endcomment%}
+	</div>
+<script src='{{ STATIC_URL }}js/note.js'></script>
+{% endblock %}

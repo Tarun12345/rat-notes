@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+    <meta charset='UTF-8'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700|Lato:400,700|Droid+Sans+Mono' rel='stylesheet'>
+    <link rel='stylesheet' media='screen' href='{{ STATIC_URL }}css/style.css'>    
+    <script src='{{ STATIC_URL }}js/jquery-1.7.1.min.js'></script>
+      <script src="{{ STATIC_URL }}js/classie.js"></script>
+      <script src="{{ STATIC_URL }}js/menu.js"></script>
+    {% block jsheader %}{% endblock %}
+  </head>
+  <body>
+      {%include 'nav.html' %}
+      <div class='clear'></div>
+      <div id='wrapper'>
+          {% block content %}
+          {% endblock %}
+      </div>
+      <script>
+        new Menu( document.getElementById( 'menu' ) );
+      </script>
+  </body>
+</html>

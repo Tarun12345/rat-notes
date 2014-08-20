@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100px" height="100px" viewBox="0 0 100 100" version="1.1">
+    <title>tick</title>
+    <defs/>
+    <g id="Page 1" fill="#000000" fill-rule="evenodd">
+        <g id="Group">
+            <path d="M8.58578644,61.4142136 L7.17157288,60 L10,57.1715729 L11.4142136,58.5857864 L30,77.1715729 L88.5857864,18.5857864 L90,17.1715729 L92.8284271,20 L91.4142136,21.4142136 L32.8284271,80 L31.4142136,81.4142136 L30,82.8284271 L28.5857864,81.4142136 L27.1715729,80 Z M8.58578644,61.4142136" id="Line" stroke-linecap="square" fill="#000000"/>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,4 @@
+{{ object.note }}
+{{ object.language }}
+{{ object.revision.commit }}
+{{ object.filename }}

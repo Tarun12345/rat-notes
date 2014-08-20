@@ -1,0 +1,70 @@
+<ul id="menu" class="menu-main">
+  <li class="trigger">
+    <a class="icon icon-menu"><span>Menu</span></a>
+    <nav class="menu-wrapper">
+      <div class="scroller">
+        <ul class="menu">
+          <li class="search-item">
+            <i class="icon-search"></i>
+            <form action="/search/">
+              <input placeholder="Search" type="text" name="q" class="search">
+            </form>
+          </li>
+          <li>
+            <a title='Views a list of users' href='{% url "users" %}'>
+              <i class="icon-users"></i>
+              Users
+            </a>
+          </li>
+          <li>
+            <a title='All notes' href='{% url "user_notes" owner='all' %}'>
+            <i class="icon-note"></i>  
+              All Notes
+            </a>
+          </li>
+          {% if user.is_authenticated %}
+          <li>
+            <a title='Modify your user preference.' href='{% url "preference" %}'>
+              <i class="icon-params"></i>
+              Preferences
+            </a>
+          </li>
+          <li>
+            <a title='View a list of your contributed notes.' href='{% url "user_notes" owner=user.pk %}'>
+              <i class="icon-profile"></i>  
+              Contributed ({{ user.set_set.all.count }})
+            </a>
+          </li>
+          <li>
+            <a title='View a list of your favorited notes.' href='{% url "favorites" %}'>
+              <i class="icon-star"></i>  
+              Favorites ({{ user.favorite_set.all.count }})
+            </a>
+          </li>
+          <li>
+            <a title='Logout' href='{% url "logout" %}'>
+              <i class="icon-exit"></i> 
+              Logout
+            </a>
+          </li>
+          {% else %}
+          <li>
+            <a title='Login' href='{% url "login" %}'>
+              <i class="icon-enter"></i> 
+              Login
+            </a>
+          </li>
+          <li>
+            <a title='Register' href='{% url "register" %}'>
+              <i class="icon-signup"></i> 
+              Register
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </div><!-- /scroller -->
+    </nav>
+  </li>
+  <li><a href='{% url "note" %}'><img id="logo" alt='quark-note' src='{{ STATIC_URL }}img/logo.png'> <span id="title" class="menu-title">RAT Note</span></a></li>
+  <li><a title='Create a new note.' href='{% url "note" %}'><i class="icon-pencil"></i><span class="menu-title">New Note</span></a></li>
+</ul>

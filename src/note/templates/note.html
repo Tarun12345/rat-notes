@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% load elapsed %}
+{% load tz %}
+
+
+{% block title %}Rat Note{% endblock %}
+
+{% block jsheader %}
+<script src='{{ STATIC_URL }}js/jquery.formset.min.js'></script>
+<script src='{{ STATIC_URL }}js/jquery.textarea.js'></script>
+<script src="{{ STATIC_URL }}js/chosen.jquery.js"></script>
+<link href="{{ STATIC_URL }}css/sir-trevor.css" type="text/css" media="all" rel="stylesheet" />
+
+<link href="{{ STATIC_URL }}css/sir-trevor-icons.css" type="text/css" media="all" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<section class='meta column_2 hide-phone'>
+    <section class='note-list'>
+    {% if user.is_authenticated %}
+        {% if not user.set_set.all.count %}
+            <h1>Hey!</h1>
+            <p>You have not created any notes, but you will eventually.</p>
+        {% else %}
+            <h1>Your Most Recent Contributions</h1>
+            <div class='notes'>
+            {% for set in user.set_set.all|slice:":10" %}
+            <div>
+                <a href='{% url "note_view2" pk=set.pk %}'>Note {{ set.pk }}{% if set.name %}: {{ set.name }}{% endif %}</a>
+            </div>
+            <div>
+                {{ set.commit_set.all.count }} commit{{ set.commit_set.all.count|pluralize }}
+                {% with set.commit_set.latest as latest %}
+                <time datetime='{{ latest.created }}' title='{{ latest.created|localtime }}'> {{ latest.created|elapsed }} by 
+                    {% if latest.owner == user %}
+                    you.
+                    {% else %}
+                        {% if not latest.owner %}
+                        Anonymous.
+                        {% else %}
+                        {{ latest.email }}.
+                        {% endif %}
+                    {% endif %}
+                </time>
+                {% endwith %}
+            </div>
+            {% endfor %}
+            </div>
+        {% endif %}
+    {% else %}
+        <h1>Hey, you're anonymous.</h1>
+        <p>You should <a href='{% url "login" %}'>login</a> or <a href='{% url "register" %}'>register</a> to organize your notes.</p>
+    {% endif %}
+    </section>
+</section>
+<div id='notes' class="column_10">
+    <form method='POST' id='note-form'>
+        <div class='entryless entry-header'>
+            <div class='name float-label'>
+                <div>
+                {% if set_meta_form %}
+                    {{ set_form.name }}
+                {% endif %}
+                </div>
+            </div>
+        </div>
+        <ul id='sortable'>
+        {% for form in forms %}
+            <li>
+                <div class='entry float-label'>
+                    <div class='file'>
+                        <div>
+                            {{ form.filename }}
+                        </div>
+                    </div>
+                    <div class='priority hidden'>
+                        {{ form.priority }}
+                    </div>
+                    <div class='note'>
+                        <div>
+                            {{ form.note }}
+                        </div>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+        </ul>
+        <div class='submit'>
+            <div class="submit-options">
+                {% if user.is_authenticated and allow_anonymous_posts %}
+                <span class="submit-options-private anonymous">
+                    <label>Remain Anonymous?</label>
+                    {{ commit_meta_form.anonymous }}
+                </span>
+                {% endif %}
+                <span class="submit-options-private">
+                    <label>Anyone can edit:</label>
+                    {% if not set_form %}
+                        {% if set_meta_form.anyone_can_edit.value %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+                    {% else %}
+                        {{ set_meta_form.anyone_can_edit }}
+                    {% endif %}
+                </span>
+                <span class="submit-options-private">
+                    <label>Private:</label>
+                {% if not set_form %}
+                    {% if set_meta_form.private.value %}
+                        Yes
+                    {% else %}
+                        No
+                    {% endif %}
+                {% else %}
+                    {{ set_meta_form.private }}
+                {% endif %}
+                </span>
+                <span class="submit-options-expires">
+                    <label>Expires:</label>
+                {% if editing %}
+                    {% if not set_meta_form.expires.value %}
+                        Never
+                    {% else %}
+                        {{ expires_time|date:"f A F j, Y" }}
+                    {% endif %}
+                {% else %}
+                    {{ set_meta_form.expires }}
+                {% endif %}
+                </span>
+            {% if editing %}
+                <input class='submit' type='submit' value='Submit Changeset'>
+            {% else %}
+                <input class='submit' type='submit' value='Create Note'>
+            {% endif %}
+            </div>
+        </div>
+    {% csrf_token %}
+    {{ forms.management_form }}
+    </form>
+</div>
+
+<script type="text/javascript" src="/static/sirtrevor/require.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/underscore-min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/eventable.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/sir-trevor.min.js"></script>
+<script type="text/javascript" src="/static/sirtrevor/markdown.js"></script>
+<script type="text/javascript" src="/static/sirtrevor/chart.js"></script>
+<script type="text/javascript" src="/static/sketchpad/sketchpad.js"></script>
+<script type="text/javascript" src="/static/sirtrevor/init.js"></script>
+<script src='{{ STATIC_URL }}js/note.js'></script>
+{% endblock %}

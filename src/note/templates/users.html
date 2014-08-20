@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %} Login {% endblock %}
+
+
+{% block content %}
+<div id='favorites'>
+  <h1>{{ count }} Member{{ count|pluralize }}</h1>
+  <h2 class='pages'>
+    {% if users.has_previous %}
+        <a href="?page={{ users.previous_page_number }}">prev</a>
+    {% endif %}
+
+    <span class="current">
+        Page {{ users.number }} of {{ users.paginator.num_pages }}
+    </span>
+
+    {% if users.has_next %}
+        <a href="?page={{ users.next_page_number }}">next</a>
+    {% endif %}
+  </h2>
+  <div class='entry'>
+    <div>
+      <div class='user'>
+        <a href='{% url "anon_notes" %}'>
+          {% if USE_ICONS %}
+            <img class='gravatar-community' title='Profile' src='{{ STATIC_URL }}img/default-icon.png'>
+          {% endif %}
+          Anonymous</a>
+        <br>
+        {{ anons.all.count }} note{{ anons.all.count|pluralize }}.
+      </div>
+      {% for user in users.object_list %}
+      <div class='user'><a href='{% url "user_notes" owner=user.pk %}'>
+          {% if USE_ICONS %}
+            <img class='gravatar-community' title='Profile' src='{{ user.preference.gravatar }}'>
+          {% endif %}
+          {{ user.preference.email }}</a>
+          <br>
+          {% if user.public_sets.count %}
+            {{ user.set_set.all.count }} note{{ user.set_set.all.count|pluralize }}.
+          {% else %}
+            A noteless user.
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+    <div class='clear'></div>
+  </div>
+</div>
+{% endblock %}

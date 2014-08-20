@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load elapsed %}
+{% load markup %}
+{% load tz %}
+
+{% block title %}
+{% if note_set.name %}
+ratnote.com - "{{ note_set.name }}"
+{% else %}
+ratnote.com - anonymous note
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="http://bradfrost.github.com/this-is-responsive/styles.css">
+<style type="text/css">
+.tab {
+  padding: 1em;
+  margin: 0;
+  position: relative;
+  cursor: pointer;
+  outline: 0;
+}
+.tab:after {
+    	content: '+';
+			position: absolute;
+			top: 0;
+			right: 0;
+			display: block;
+			font-size: 1.5em;
+			padding: 0.5em;
+}
+.tab.active {
+  background: rgba(0,0,0,0.3);
+}
+.tab.active:after {
+   content: '-'; 
+}
+
+.panel { 
+  overflow: hidden;
+}
+.js .panel {
+  max-height: 0;
+  -webkit-transition: max-height 0.3s ease-out;
+  -moz-transition: max-height 0.3s ease-out;
+  -ms-transition: max-height 0.3s ease-out;
+  -o-transition: max-height 0.3s ease-out;
+  transition: max-height 0.3s ease-out;
+}
+.js .panel.active {
+  max-height: 100em;
+}
+.panel p {
+  padding: 1em;
+}
+.panel p:last-child {
+   margin: 0; 
+}
+.list-block ul{
+	padding:1em 3em;
+}
+.list-block li{
+	list-style: disc;
+}
+</style>
+
+
+<script type="text/javascript" src="/static/sirtrevor/require.min.js"></script>
+<!--Pattern HTML-->
+<div class="row">
+	{% if note_set.name %}<h1 class="lead">{{ note_set.name }}</h1>{% endif %}
+	<a href='{% url "note_view" pk=note_set.pk %}'>Advanced Collaboration{% if note_set.name %}: {{ note_set.name }}{% endif %}</a>
+  <div id="pattern" class="pattern">
+    <!--Begin Pattern HTML-->
+
+    {% for note in notes %}
+	    <h3 id="tab1" class="tab accordian" aria-controls="panel1" role="tab" tabindex="0">{{ note.filename }}</h3>
+
+	  	<div id="panel1" class="panel accordian" aria-labeledby="tab1" role="tabpanel">
+	  	 		{%if note.note %}
+	              {{ note.note.html|safe }}
+	            {%endif%}
+		</div>
+	{%endfor%}
+
+	</div>
+</div>
+	
+
+<script type="text/javascript">
+$(document).ready(function() {
+      $('body').addClass('js');
+  	  var $tab = $('.tab');
+  
+		$tab.on("click", function(e){
+      e.preventDefault();
+      var $this = $(this);
+      $this.toggleClass('active');
+      $this.next('.panel').toggleClass('active');
+    });
+});
+</script>
+
+{%endblock%}

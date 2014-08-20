@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load elapsed %}
+{% load tz %}
+
+{% block title %} Login {% endblock %}
+
+
+{% block content %}
+<div id='favorites'>
+  <h1>
+    {% if favorites.count %}
+       Favorites ({{ favorites.count }})
+    {% else %}
+      Favoriteless
+    {% endif %}
+  </h1>
+  <div class='entry'>
+    <div>
+      {% for favorite in favorites %}
+        {% with favorite.parent_set as set %}
+          <div>
+            <a href='{% url "note_view" pk=set.pk %}'>Note {{ set.pk }}{% if set.name %}: {{ set.name }}{% endif %}</a>
+            <br>
+            {{ set.commit_set.all.count }} commit{{ set.commit_set.all.count|pluralize }}
+            {% with set.commit_set.latest as latest %}
+              <span class='date' title='{{ latest.created|localtime }}'>
+                {{ latest.created|elapsed }} by 
+                {% if latest.owner %}you{% else %}{{ latest.email }}{% endif %}.
+              </span>
+            {% endwith %}
+          </div>
+        {% endwith %}
+      {% empty %}
+        <div>
+          <h1 class='center'>What is a favorite if you don't show love?</h1>
+          <p class='tiny gray center'>(a.k.a. go <a href='/search/'>find notes</a> to favorite)</p>
+        </div>
+      {% endfor %}
+    </div>
+    <div class='clear'></div>
+  </div>
+</div>
+{% endblock %}

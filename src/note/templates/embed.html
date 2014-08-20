@@ -1,0 +1,4 @@
+{% load html2js %}
+document.write({% htmltojs %}
+<link rel='stylesheet' media='all' type='text/css' href='{{ site }}{{ STATIC_URL }}css/themes/embed/{{ theme }}.css'> <div class="eatnote">{%if note.note %}{{ note.note.html|safe }}{%endif%}</div>
+{% endhtmltojs %});

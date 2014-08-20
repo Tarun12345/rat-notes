@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load elapsed %}
+{% load tz %}
+
+{% block title %} Login {% endblock %}
+
+
+{% block content %}
+<div id='favorites'>
+  <h1>
+    {% if USE_ICONS %}
+        {% if not owner %}
+          <a href='{% url "anon_notes" %}'><img class='gravatar-community' alt='Anonymous' src='{{ STATIC_URL }}img/default-icon.png'></a>
+        {% else %}
+          <img id='profile-img' alt='Profile' src='{{ owner.preference.gravatar }}'>
+        {% endif %}
+    {% endif %}
+    {{ count }} Contribution{{ count|pluralize }}{% if not all %} by
+    {% if sets.count %}
+        {% if owner %}
+          {{ owner.preference.email }}
+        {% else %}
+          Anonymous
+        {% endif %}
+    {% else %}
+        {% if owner %}
+          {{ owner.preference.email }}
+        {% else %}
+          Anonymous
+        {% endif %}
+    {% endif %}
+    {% endif %}
+  </h1>
+  <h2 class='pages'>
+    {% if sets.has_previous %}
+        <a href="?page={{ sets.previous_page_number }}">prev</a>
+    {% endif %}
+
+    <span class="current">
+        Page {{ sets.number }} of {{ sets.paginator.num_pages }}
+    </span>
+
+    {% if sets.has_next %}
+        <a href="?page={{ sets.next_page_number }}">next</a>
+    {% endif %}
+  </h2>
+  <div class='entry'>
+    <div>
+      {% for set in sets.object_list %}
+        <div>
+            {% if set.private %}
+            <img src='{{ STATIC_URL }}img/icons/key.png' alt='private' title='This note is private' style='vertical-align: middle'>
+            {% endif %}
+            <a href='{% url "note_view" pk=set.pk %}'>Note {{ set.pk }}{% if set.name %}: {{ set.name }}{% endif %}</a>
+            {% if set.private %}
+            {% endif %}
+          <br>
+          {{ set.commit_set.all.count }} commit{{ set.commit_set.all.count|pluralize }}
+          {% with set.commit_set.latest as latest %}
+            <span class='date' title='{{ latest.created|localtime }}'>
+              {{ latest.created|elapsed }} by
+              {% if latest.owner == user %}
+                you.
+              {% else %}
+                {% if not latest.owner %}
+                  Anonymous.
+                {% else %}
+                  {{ latest.email }}.
+                {% endif %}
+              {% endif %}
+            </span>
+          {% endwith %}
+        </div>
+      {% empty %}
+        <div>
+          <h1 class='center'>Your requests echo far, but nothing happens.</h1>
+          {% if user == owner %}
+            <p class='tiny gray center'>(a.k.a. you have not <a href='{% url "note" %}'>created</a> any notes)</p>
+          {% else %}
+            <p class='tiny gray center'>(a.k.a. this user has not <a href='{% url "note" %}'>created</a> any notes)</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+      </div>
+    </div>
+    <div class='clear'></div>
+  </div>
+</div>
+{% endblock %}

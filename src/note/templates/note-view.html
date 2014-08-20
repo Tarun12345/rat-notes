@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+{% load elapsed %}
+{% load markup %}
+{% load tz %}
+
+{% block title %}
+{% if note_set.name %}
+ratnote.com - "{{ note_set.name }}"
+{% else %}
+ratnote.com - anonymous note
+{% endif %}
+{% endblock %}
+
+{% block jsheader %}
+<script src='{{ STATIC_URL }}js/jquery.formset.min.js'></script>
+<script src='{{ STATIC_URL }}js/ba-linkify.min.js'></script>
+<link rel="stylesheet" type="text/css" href="http://weloveiconfonts.com/api/?family=typicons">
+<script type="text/javascript" src="/static/sirtrevor/require.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div id='notes' class="column_12">
+    {% if note_set.private %}
+      <div class='private-note entryless'>
+        <div class='entry-header'>
+          <span>
+            This note is <strong>private</strong>, you'll need this special URL to
+            {% if not note_set.owner_id or user.id != note_set.owner_id %}revisit{% else %}share{% endif %} it:
+            <input type="text" size="75" value="{{ site }}{% url "note_view" pk=note_set.pk private_key=note_set.private_key %}" readonly>
+          </span>
+        </div>
+      </div>
+    {% endif %}
+    <div class='entryless info'>
+      <div class='small entry-header'>
+        {% if user.is_authenticated %}
+        <span favorite={{ favorited }} id='favorite-toggle'>
+          {% if favorited %}
+            <img title='Click to remove this post from your favorites' align='left' alt='favorite' height='32px' src='{{ STATIC_URL }}img/favorite.png'>
+          {% else %}
+            <img title='Click to favorite this post' align='left' alt='not-favorite' height='32px' src='{{ STATIC_URL }}img/not-favorite.png'>
+          {% endif %}
+          </span>
+        {% endif %}
+      <span class='header'>
+        {% if note_set.name %}<h1 class="lead">{{ note_set.name }}</h1>{% endif %} 
+        {% if USE_ICONS %}
+          {% if commit_current.owner %}
+          <a href='{% url "user_notes" owner=commit_current.owner.pk %}'>
+            <img title='User notes' class='gravatar-community' alt='User' src='{{ commit_current.owner.preference.gravatar }}'></a>
+          {% else %}
+            <a href='{% url "anon_notes" %}'><img class='gravatar-community' alt='Anonymous' src='{{ STATIC_URL }}img/default-icon.png'></a>
+          {% endif %}
+        {% endif %}
+        <span class="note-actions">
+        {% if editable %}
+            <a title='Find the bug.' href='{% url "note_edit" pk=note_set.pk private_key=note_set.active_private_key %}?commit={{ commit_current.commit }}'><span class="typicons-edit"></span><small>Edit</small></a>
+        {% else %}
+            <span title='This note is not editable' class='unlink gray'><span class="typicons-edit"></span><small>Edit</small></span>
+        {% endif %}
+        {% if user.is_authenticated %}
+          <a title='Because you can do much better.' href='{% url "note_fork" pk=note_set.pk private_key=note_set.active_private_key %}?commit={{ commit_current.commit }}'><span class="typicons-power"></span><small>Power</small></a>
+        {% else %}
+        <span title='Login to fork' class='unlink gray'><span class="typicons-power"></span><small>Power</small></span>
+        {% endif %}
+        {% if user.is_authenticated and not commit_current.owner %}
+            <a title='How would you feel?' href='{% url "commit_adopt" pk=commit_current.pk private_key=note_set.active_private_key %}'><span class="typicons-compass"></span><small>Adopt</small></a>
+        {% endif %}
+        <a title='Download note' href='{% url "commit_download" pk=commit_current.pk private_key=note_set.active_private_key %}'><span class="typicons-archive"></span><small>Download</small></a>
+        {% if commit_current.diff %}
+          <span id='diff-toggle' class='link' title='You are not to blame'><span class="typicons-directions"></span><small>Difference</small></span>
+        {% else %}
+          <span class='gray unlink' title='No diff available'><span class="typicons-directions"></span><small>Difference</small></span>
+        {% endif %}
+        </span>
+      </span>
+        <br>
+        id: {{ note_set.pk }} / commit: {{ commit_current.commit|slice:":8" }}
+        {% if commit_current.owner %} by <strong><a href='{% url "user_notes" owner=commit_current.owner.pk %}'>{{ commit_current.email }}</a></strong> {% endif %}
+        <span class='date' title="{{ commit_current.created|localtime }}">
+          {{ commit_current.created|elapsed }}
+          with {{ commit_current.views }} 
+          view{{ commit_current.views|pluralize }}.
+        </span>
+        {% if note_set.fork %}
+          <br>
+          <em class='light'>Fork of                
+            {% if note_set.fork.parent_set.owner %}
+              <a href='{% url "user_notes" owner=note_set.fork.parent_set.owner.pk %}'>{{ note_set.fork.parent_set.email }}</a>
+            {% else %}
+              <a href='{% url "anon_notes" %}'>Anonymous</a>
+            {% endif %} at commit 
+            <a href='{% url "note_view" pk=note_set.fork.parent_set.pk %}?commit={{ note_set.fork.commit }}'>{{ note_set.fork.commit|slice:":8" }}</a>
+          </em>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if commit_current.diff %}
+    <div id='diff' class='entry hidden'>
+      <div class='file'><div>Diff</div></div>
+      <div class='note'>
+        <div>
+          {{ commit_current.diff|safe }}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% for note in notes %}
+      <article>
+        <div class='file'>
+          <div class='file-download'>
+              <a title='You should just fork it.' href='{% url "note_raw" pk=note.pk private_key=note_set.active_private_key %}?download=true'><span class="typicons-archive"></span>Download</a>
+              <a title='Embedding it.' href='{% url "note_embed" pk=note.pk private_key=note_set.active_private_key %}'><span class="typicons-pin"></span>Embed</a>
+          </div>
+          <div id='-{{ note.pk }}'>
+            <h1><a href='#note-{{ note.pk }}'>{{ note.filename }}</a></h1> 
+            <a title='Too raw for you.' href='{% url "note_raw" pk=note.pk private_key=note_set.active_private_key %}'><span class="typicons-anchor"></span>Raw</a>
+          </div>
+        </div>
+        <div class='note'>
+          <div>
+            {%if note.note %}
+              {{ note.note.html|safe }}
+            {%endif%}
+          </div>
+        </div>
+      </article>
+      <div class='clear'></div>
+    {% endfor %}
+    {% if commit_current.comment_set.exists %}
+      <div class='entry-comment comment'>
+        <h1>{{ commit_current.comment_set.all.count }} Comment{{ commit_current.comment_set.all.count|pluralize }}</h1>
+        {% for comment in commit_current.comment_set.all %}
+          <div name='comment-{{ comment.pk }}' class='comment-index'>
+          {% if USE_ICONS %}
+              <h1 class='author {% if comment.owner == commit_current.owner %}committer{% endif %}' style='background: url({{ comment.owner.preference.gravatar }}) no-repeat left center #DDD'>
+            {% else %}
+              <h1 class='author {% if comment.owner == commit_current.owner %}committer{% endif %}'> 
+            {% endif %}
+              <a href='{% url "user_notes" owner=comment.owner.pk %}'>
+                {{ comment.email }}</a> 
+              <a href='#comment-{{ comment.pk }}' id='comment-{{ comment.pk }}'>#</a>
+            </h1>
+            <div class='markdown'>{{ comment.comment|markdown:"safe" }}</div>
+          </div>
+        {% empty %}
+          <div name='comment-blank' class='comment-index'>
+            {% if user.is_authenticated %}
+                <pre>If only there were comments...</pre>
+            {% else %}
+                <pre>If only there were comments... Maybe <a href='{% url "login" %}'>login</a> and add one?</pre>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% if user.is_authenticated %}
+      <div class='entry comment'>
+        <h1 class='header'>Comment</h1>
+        <p class='tiny gray'>Hint: You can use <a href='http://daringfireball.net/projects/markdown/'>markdown</a> in your comment.</p>
+        <form method='POST'>
+          {{ comment_form.comment }}
+          {% csrf_token %}
+          <input type='submit' value='Add Comment'>
+        </form>
+      </div>
+    {% endif %}
+  </div>  
+</div>
+
+
+
+<div class="row">
+   <ol class='timeline'>
+    {% for commit in note_set.ordered_commits %}
+      {% if commit.commit == commit_current.commit %}
+        <li class='active'>
+      {% else %}
+        <li>
+      {% endif %}
+         <a title='{{ commit.commit.views }} view{{ commit.commit.views|pluralize }}' href='{% url "note_view" pk=note_set.pk private_key=note_set.private_key %}?commit={{ commit.commit }}'>{{ commit.created|elapsed }}.</a>
+        <div class="details">
+          <span class='author'>
+            {% if commit.owner %}
+                <a href='{% url "user_notes" owner=commit.owner.pk %}'>{{ commit.email }}</a>
+            {% else %}
+                <a href='{% url "anon_notes" %}'>Anonymous</a>
+            {% endif %}
+          </span> 
+        </div>
+      </li>
+    {% endfor %}
+  </ol>
+</div>
+
+<div class="row">
+<section class="meta column_4">
+  {% if user.is_authenticated %}
+    <br>
+    {% if not commit_current.parent_set.owner %}
+      <div class="sidebar-message">
+        <span class='alert'>Hey! This note is not owned by anyone.
+          <a href='{% url "note_adopt" pk=commit_current.parent_set.pk %}'>Adopt it!</a>
+        </span>
+      </div>
+    {% endif %}
+    {% if commit_current.parent_set.owner == user %}
+      <div class="sidebar-message">
+        <a class='alert' href='{% url "note_delete" pk=commit_current.parent_set.pk %}'>delete this entire note</a>
+      </div>
+    {% endif %}
+  {% endif %}
+</section>
+</div>
+<script>var set = "{{ commit_current.parent_set.pk }}";</script>
+<script src='{{ STATIC_URL }}js/view.js'></script>
+{% endblock %}

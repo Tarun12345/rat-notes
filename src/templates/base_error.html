@@ -1,0 +1,22 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+    <meta charset='UTF-8'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700|Lato:400,700|Droid+Sans+Mono' rel='stylesheet'>
+    <link rel='stylesheet' media='screen' type='text/css' href='{{ STATIC_URL }}css/style.css'>
+    <script src='{{ STATIC_URL }}js/jquery-1.7.1.min.js'></script>
+    {% block jsheader %}{% endblock %}
+  </head>
+  <body>
+    <div id='header'>
+      <a href='{% url "note" %}'><img alt='quark-note' src='{{ STATIC_URL }}img/logo.png'></a>
+     %include 'nav.html' %}
+     <div class='clear'></div>
+      <div id='wrapper'>
+          {% block content %}
+          {% endblock %}
+      </div>
+  </body>
+</html>

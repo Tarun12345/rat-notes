@@ -1,0 +1,17 @@
+{% load sirtrevor %}
+<div class="content-block" id="markdown-block">
+{{ text }}
+</div>
+<script type="text/javascript">
+	cont = $('#markdown-block');
+	  require.config({
+	    paths: {
+	      "pagedown": "/static/sirtrevor/"
+	    },
+	    waitSeconds: 15
+	  }); 
+    require(["pagedown/Markdown.Converter.min"],function(){
+      var converter = new Markdown.Converter();
+      cont.html(converter.makeHtml(cont.html()));
+    });
+</script>
